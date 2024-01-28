@@ -1,31 +1,248 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { colorAtom } from "../store/state";
 import { Buttons } from "./Buttons";
 
 export default function GithubCard() {
-  const color = useRecoilValue(colorAtom);
-  console.log(color)
+  const [color, setColor] = useRecoilState(colorAtom);
+  const [intervalID, setIntervalID] = useState();
+  const [currentIndex, setCurrentIndex] = useState(0);
   const { id } = useParams();
   const [user, setUser] = useState({});
+  const [play, setPlay] = useState(true);
+  console.log(color);
+  const colours = [
+    "yellow",
+    "chartreuse",
+    "blue",
+    "lightskyblue",
+    "blueviolet",
+    "rosybrown",
+    "burlywood",
+    "wheat",
+    "cadetblue",
+    "powderblue",
+    "palegreen",
+    "chocolate",
+    "saddlebrown",
+    "coral",
+    "lightsalmon",
+    "cornflowerblue",
+    "lightsteelblue",
+    "cornsilk",
+    "lightyellow",
+    "crimson",
+    "indianred",
+    "cyan",
+    "lightcyan",
+    "darkblue",
+    "midnightblue",
+    "darkcyan",
+    "teal",
+    "darkgoldenrod",
+    "goldenrod",
+    "darkgray",
+    "silver",
+    "darkgreen",
+    "mediumseagreen",
+    "darkgrey",
+    "slategrey",
+    "darkkhaki",
+    "khaki",
+    "darkmagenta",
+    "mediumorchid",
+    "darkolivegreen",
+    "olivedrab",
+    "darkorange",
+    "sandybrown",
+    "darkorchid",
+    "thistle",
+    "darkred",
+    "indigo",
+    "darksalmon",
+    "lightcoral",
+    "darkseagreen",
+    "mediumaquamarine",
+    "darkslateblue",
+    "slateblue",
+    "darkslategray",
+    "lightslategray",
+    "darkslategrey",
+    "lightslategrey",
+    "darkturquoise",
+    "mediumturquoise",
+    "darkviolet",
+    "plum",
+    "deeppink",
+    "dimgray",
+    "antiquewhite",
+    "dimgrey",
+    "aqua",
+    "gray",
+    "aquamarine",
+    "grey",
+    "azure",
+    "lightgray",
+    "beige",
+    "lightgrey",
+    "bisque",
+    "whitesmoke",
+    "lightpink",
+    "deepskyblue",
+    "skyblue",
+    "dimgray",
+    "dimgrey",
+    "dodgerblue",
+    "firebrick",
+    "rosybrown",
+    "floralwhite",
+    "honeydew",
+    "forestgreen",
+    "darkolivegreen",
+    "fuchsia",
+    "lavender",
+    "gainsboro",
+    "lightgray",
+    "ghostwhite",
+    "white",
+    "gold",
+    "khaki",
+    "goldenrod",
+    "darkgoldenrod",
+    "gray",
+    "green",
+    "greenyellow",
+    "grey",
+    "honeydew",
+    "hotpink",
+    "palevioletred",
+    "indianred",
+    "ivory",
+    "beige",
+    "khaki",
+    "lavender",
+    "lavenderblush",
+    "lawngreen",
+    "greenyellow",
+    "lemonchiffon",
+    "lightgoldenrodyellow",
+    "lightgray",
+    "lightgreen",
+    "lightgrey",
+    "lightpink",
+    "lightsalmon",
+    "lightseagreen",
+    "lightskyblue",
+    "lightslategray",
+    "lightslategrey",
+    "lightsteelblue",
+    "lightyellow",
+    "lime",
+    "limegreen",
+    "linen",
+    "magenta",
+    "maroon",
+    "mediumaquamarine",
+    "mediumblue",
+    "mediumorchid",
+    "mediumpurple",
+    "mediumseagreen",
+    "mediumslateblue",
+    "mediumspringgreen",
+    "mediumturquoise",
+    "mediumvioletred",
+    "midnightblue",
+    "mintcream",
+    "mistyrose",
+    "moccasin",
+    "navajowhite",
+    "navy",
+    "oldlace",
+    "olive",
+    "olivedrab",
+    "orange",
+    "orangered",
+    "orchid",
+    "palegoldenrod",
+    "palegreen",
+    "paleturquoise",
+    "palevioletred",
+    "papayawhip",
+    "peachpuff",
+    "peru",
+    "pink",
+    "plum",
+    "powderblue",
+    "purple",
+    "rebeccapurple",
+    "red",
+    "rosybrown",
+    "royalblue",
+    "saddlebrown",
+    "salmon",
+    "sandybrown",
+    "seagreen",
+    "seashell",
+    "sienna",
+    "silver",
+    "skyblue",
+    "slateblue",
+    "slategray",
+    "slategrey",
+    "snow",
+    "springgreen",
+    "steelblue",
+    "tan",
+    "teal",
+    "thistle",
+    "tomato",
+    "turquoise",
+    "violet",
+    "wheat",
+    "white",
+    "whitesmoke",
+    "yellow",
+    "yellowgreen",
+  ];
+
   useEffect(() => {
-    console.log("hello");
+    let i = 0;
+    let intervalIDTemp;
+    if (play) {
+       intervalIDTemp = setInterval(() => {
+        setColor(colours[i++ + currentIndex]);
+      }, 1000);
+      setIntervalID(intervalIDTemp);
+    }
+
     fetch("https://api.github.com/users/" + id).then((res) => {
       res.json().then((data) => {
         setUser(data);
-        console.log("data");
       });
     });
-  }, []);
 
+    return () => {
+      clearInterval(intervalIDTemp);
+    };
+  }, [play]);
+
+  function togglePlay() {
+    console.log(play);
+    clearInterval(intervalID);
+    if (play == true) {
+      clearInterval(intervalID);
+    } else {
+      setPlay(play);
+    }
+    setPlay((e) => !e);
+  }
   return (
     <>
       <div
         style={{ backgroundColor: color }}
-        className={`flex bg-red-600 bg-${color}-600 w-screen h-screen justify-center items-center flex-col `}
+        className={`flex bg-black w-screen h-screen justify-center items-center flex-col gap-8 `}
       >
-        <Buttons />
         <div className="border bg-white  text-4xl rounded-md flex flex-col gap-2 items-center font-mono">
           {" "}
           <img className="rounded-full w-32 mt-3" src={user.avatar_url}></img>
@@ -58,6 +275,70 @@ export default function GithubCard() {
               <p className="text-sm">Repositories</p>
             </div>
           </div>
+        </div>
+        <div className="flex gap-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z"
+            />
+          </svg>
+          <div onClick={togglePlay}>
+            {!play && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
+                />
+              </svg>
+            )}
+            {play && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 5.25v13.5m-7.5-13.5v13.5"
+                />
+              </svg>
+            )}
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z"
+            />
+          </svg>
         </div>
       </div>
     </>
