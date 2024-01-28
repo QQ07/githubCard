@@ -207,13 +207,17 @@ export default function GithubCard() {
   ];
 
   useEffect(() => {
+    console.log("effe")
     let i = 0;
     let intervalIDTemp;
     if (play) {
-       intervalIDTemp = setInterval(() => {
-        setColor(colours[i++ + currentIndex]);
+      intervalIDTemp = setInterval(() => {
+        setColor(colours[++i + currentIndex]);
       }, 1000);
       setIntervalID(intervalIDTemp);
+    }
+    else{
+       setColor(colours[i + currentIndex]);
     }
 
     fetch("https://api.github.com/users/" + id).then((res) => {
@@ -225,7 +229,7 @@ export default function GithubCard() {
     return () => {
       clearInterval(intervalIDTemp);
     };
-  }, [play]);
+  }, [play, currentIndex]);
 
   function togglePlay() {
     console.log(play);
@@ -241,7 +245,7 @@ export default function GithubCard() {
     <>
       <div
         style={{ backgroundColor: color }}
-        className={`flex bg-black w-screen h-screen justify-center items-center flex-col gap-8 `}
+        className={`flex bg-black w-screen h-screen justify-center items-center flex-col gap-8 overflow-hidden `}
       >
         <div className="border bg-white  text-4xl rounded-md flex flex-col gap-2 items-center font-mono">
           {" "}
@@ -277,20 +281,27 @@ export default function GithubCard() {
           </div>
         </div>
         <div className="flex gap-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
+          <div
+            onClick={() => {
+              setCurrentIndex(currentIndex - 1);
+              console.log(currentIndex)
+            }}
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z"
-            />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z"
+              />
+            </svg>
+          </div>
           <div onClick={togglePlay}>
             {!play && (
               <svg
@@ -325,20 +336,26 @@ export default function GithubCard() {
               </svg>
             )}
           </div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
+          <div
+            onClick={() => {
+              setCurrentIndex(currentIndex + 1);
+            }}
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z"
-            />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </>

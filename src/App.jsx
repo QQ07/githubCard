@@ -15,7 +15,7 @@ function App() {
             <Route path="/*" Component={Home} />
           </Routes>
         </BrowserRouter>
-        <Buttons />
+        {/* <Buttons /> */}
       </RecoilRoot>
     </>
   );
